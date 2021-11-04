@@ -16,7 +16,6 @@ const advancedResults = (model,populate) =>async(req,res,next)=>{
     queryString= queryString.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`)
    
 query = model.find(JSON.parse(queryString));
-
 //select fields
 if(req.query.select){
     const fields = req.query.select.split(',').join(' ');
@@ -30,23 +29,24 @@ if(req.query.sort){
 }
 //default sort
 else{
-query=query.sort('createdAt');
+query=query.sort('-createdAt');
 }
 
 //pagination
 const page = parseInt(req.query.page,10) || 1;
-const limit = parseInt(req.query.limit,10) || 5;
+const limit = parseInt(req.query.limit,10) || 100;
 const startIndex = (page-1)*limit
 const endIndex = page*limit;
 const total= await model.countDocuments();
 //when we reach the 2nd page , documents in first has to b skipped
 query=query.skip(startIndex).limit(limit)
-if(populate){
-    query.populate(populate);
+ if(populate){
+     query.populate(populate);
 }
    //finding resource
-    query
-   .then((resp) =>{
+   const result = await query;
+   
+  
        //pagination result
        const pagination ={}
        //not last page
@@ -66,12 +66,12 @@ if(populate){
 } 
 res.advancedResults ={
     success: true,
-    count: resp.length,
+    totalcount: total,
     pagination,
-    data: resp
+    data: result
 }
 next();
-})
+
    
 }
 module.exports= advancedResults;

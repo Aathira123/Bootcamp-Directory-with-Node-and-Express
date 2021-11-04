@@ -1,7 +1,6 @@
 const ErrorResponse = require("../utils/errorResponse");
 
 errorHandler=(err,req,res,next)=>{
-    console.log(err.name);
 let error = {...err}
 error.message = err.message;
     //Mongoose bad ObjctId
