@@ -19,6 +19,20 @@ exports.registerUser = asyncHandler(async(req,res,next)=>{
 
 })
 
+// @desc  Logout USER
+// @route  GET /api/v1/auth/logout
+
+// @access Private
+exports.logout = asyncHandler(async(req,res,next)=>{
+    res.cookie('jwt-token', 'none',{
+        expires: new Date(Date.now() + 10*1000),
+        httpOnly: true
+    })
+    
+    res.sendStatus(200)
+ 
+ })
+
 // @desc  LOGIN USER
 // @route  POST /api/v1/auth/login
 

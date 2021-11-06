@@ -10,9 +10,9 @@ exports.protect = asyncHandler(async(req,res,next)=>{
     if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
         token= req.headers.authorization.split(' ')[1];
     }
-    // else if(req.cookies.jwt-token){
-
-    // }
+     else if(req.cookies["jwt-token"]){
+token = req.cookies["jwt-token"];
+    }
     //Make sure token exists
     if(!token){
 return next(new ErrorResponse(
@@ -24,6 +24,7 @@ return next(new ErrorResponse(
         //Verify token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.user = await User.findById(decoded.id);
+        console.log(decoded);
         next();
     }
      catch(err){

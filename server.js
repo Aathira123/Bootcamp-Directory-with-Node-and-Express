@@ -1,6 +1,8 @@
 const express = require('express')
 const dotenv = require('dotenv')
 const morgan = require('morgan')
+const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize')
 //global error handling middlewaee
 const fileUpload = require('express-fileupload');
 const errorHandler = require('./middleware/error');
@@ -14,6 +16,7 @@ connectDB();
 const bootcamps = require('./routes/bootcamps');
 const users = require('./routes/users');
 const courses = require('./routes/courses');
+const reviews = require('./routes/reviews')
 const auth = require('./routes/auth')
 const path = require('path')
 const app = express();
@@ -31,6 +34,11 @@ app.use(morgan('dev'))
 
 app.use(fileUpload());
 
+//sanitize data
+app.use(mongoSanitize());
+
+//set security headers
+app.use(helmet());
 //set static folder as public
 app.use(express.static(path.join(__dirname, 'public')))
 // mount routers
@@ -38,6 +46,7 @@ app.use('/api/v1/bootcamps', bootcamps);
 app.use('/api/v1/courses', courses);
 app.use('/api/v1/auth', auth);
 app.use('/api/v1/users', users);
+app.use('/api/v1/reviews', reviews)
 app.use(errorHandler);
 const PORT = process.env.PORT || 5000
 const server =app.listen(PORT, () => {

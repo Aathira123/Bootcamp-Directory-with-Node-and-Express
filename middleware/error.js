@@ -5,7 +5,7 @@ let error = {...err}
 error.message = err.message;
     //Mongoose bad ObjctId
     if(err.name === 'CastError'){
-        const message = `Bootcamp not found with id of ${err.value}`
+        const message = `Resource not found`
         error = new ErrorResponse(message, 404);
     }
     //Mongoose duplicate key error

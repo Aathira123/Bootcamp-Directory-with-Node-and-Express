@@ -103,7 +103,7 @@ exports.deleteCourse= asyncHandler( async(req,res,next)=>{
     let course = await Course.findById(req.params.id)
     console.log(course);
     if(!course){
-        return next(new ErrorResponse('Course with id'+ req.params.id + 'not found'))
+        return next(new ErrorResponse('Course with id'+ req.params.id + 'not found',404))
        }
     
          //Make sure user is course owner
